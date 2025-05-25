@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect Wallet - Vilo Web3 Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      text-align: center;
+      padding: 3rem;
+    }
+    .wallet-box {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    #wallet-address {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Connect Your Wallet</h1>
+  <div class="wallet-box">
+    <p>Click the button below to connect MetaMask</p>
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <div id="wallet-address"></div>
+  </div>
+
+  <script>
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const wallet = accounts[0];
+          document.getElementById("wallet-address").innerText = "Connected: " + wallet;
+        } catch (error) {
+          console.error("User rejected connection");
+        }
+      } else {
+        alert("MetaMask is not installed. Please install it to use this feature.");
+      }
+    }
+  </script>
+</body>
+</html>
