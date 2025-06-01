@@ -8,13 +8,26 @@
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  background: linear-gradient(135deg, #f6a32c, #f6851b);
   color: #fff;
   text-align: center;
-  padding: 50px;
 }
-h1 { font-size: 2.5em; margin-bottom: 30px; }
+.hero {
+  background: url('metamask.png') no-repeat center center;
+  background-size: cover;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hero h1 {
+  font-size: 2.5em;
+  margin: 0;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
 button {
+  margin-top: 30px;
   padding: 12px 24px;
   font-size: 1.2em;
   cursor: pointer;
@@ -42,7 +55,9 @@ a { color: #fff; font-weight: bold; }
 </style>
 </head>
 <body>
-  <h1>Web3 Dashboard</h1>
+  <div class="hero">
+    <h1>Web3 Dashboard</h1>
+  </div>
   <button id="connectBtn">Connect to MetaMask</button>
 
   <div id="status"></div>
