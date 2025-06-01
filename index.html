@@ -3,38 +3,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Web3 Site - Connect to MetaMask</title>
+<title>Web3 Dashboard</title>
 <style>
-body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
-button { padding: 10px 20px; font-size: 1.2em; cursor: pointer; background: #1e88e5; color: #fff; border: none; border-radius: 5px; }
-button:hover { background: #0d47a1; }
-a { color: #1e88e5; font-weight: bold; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #f6a32c, #f6851b);
+  color: #fff;
+  text-align: center;
+  padding: 50px;
+}
+h1 { font-size: 2.5em; margin-bottom: 30px; }
+button {
+  padding: 12px 24px;
+  font-size: 1.2em;
+  cursor: pointer;
+  background: #f6851b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #ff9800;
+}
+a { color: #fff; font-weight: bold; }
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+}
+#accountInfo {
+  display: none;
+  margin-top: 20px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 20px;
+}
 </style>
 </head>
 <body>
-  <h1>Connect to MetaMask</h1>
-  <button id="connectBtn">Connect</button>
-  <p id="status"></p>
+  <h1>Web3 Dashboard</h1>
+  <button id="connectBtn">Connect to MetaMask</button>
+
+  <div id="status"></div>
+  <div id="accountInfo">
+    <p><strong>Account:</strong> <span id="account"></span></p>
+    <p><strong>Balance:</strong> <span id="balance"></span> ETH</p>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script>
     const connectBtn = document.getElementById('connectBtn');
     const status = document.getElementById('status');
+    const accountInfo = document.getElementById('accountInfo');
+    const accountEl = document.getElementById('account');
+    const balanceEl = document.getElementById('balance');
 
     connectBtn.onclick = async () => {
       if (typeof window.ethereum !== 'undefined') {
         try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          status.textContent = 'Connected account: ' + accounts[0];
-          status.style.color = 'green';
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          accountEl.textContent = address;
+
+          const balance = await provider.getBalance(address);
+          const balanceInEth = ethers.utils.formatEther(balance);
+          balanceEl.textContent = balanceInEth;
+
+          status.textContent = 'Connected!';
+          status.style.color = '#c8e6c9';
+          accountInfo.style.display = 'block';
         } catch (error) {
           console.error(error);
           status.textContent = 'Connection error. Please try again.';
-          status.style.color = 'red';
+          status.style.color = '#f44336';
         }
       } else {
         status.innerHTML = 'MetaMask not detected. Please <a href="https://metamask.io/download.html" target="_blank">install MetaMask</a>.';
-        status.style.color = 'red';
+        status.style.color = '#f44336';
       }
     };
   </script>
