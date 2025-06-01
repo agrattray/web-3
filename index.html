@@ -8,27 +8,33 @@
 body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
 button { padding: 10px 20px; font-size: 1.2em; cursor: pointer; background: #1e88e5; color: #fff; border: none; border-radius: 5px; }
 button:hover { background: #0d47a1; }
+a { color: #1e88e5; font-weight: bold; }
 </style>
 </head>
 <body>
   <h1>Connect to MetaMask</h1>
   <button id="connectBtn">Connect</button>
+  <p id="status"></p>
 
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script>
     const connectBtn = document.getElementById('connectBtn');
+    const status = document.getElementById('status');
 
     connectBtn.onclick = async () => {
       if (typeof window.ethereum !== 'undefined') {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          alert('Connected account: ' + accounts[0]);
+          status.textContent = 'Connected account: ' + accounts[0];
+          status.style.color = 'green';
         } catch (error) {
           console.error(error);
-          alert('Connection error');
+          status.textContent = 'Connection error. Please try again.';
+          status.style.color = 'red';
         }
       } else {
-        alert('MetaMask not detected');
+        status.innerHTML = 'MetaMask not detected. Please <a href="https://metamask.io/download.html" target="_blank">install MetaMask</a>.';
+        status.style.color = 'red';
       }
     };
   </script>
