@@ -3,30 +3,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Web3 Dashboard - Image and Button</title>
+<title>Web3 Dashboard - Final</title>
 <style>
 body {
+  background: #f6851b;
   text-align: center;
   font-family: Arial, sans-serif;
-  margin-top: 20px;
+  margin: 0;
+  padding: 20px;
 }
 button {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 1.1em;
   cursor: pointer;
-  background: #f6851b;
+  background: #1e88e5;
   color: #fff;
   border: none;
   border-radius: 5px;
 }
 button:hover {
-  background: #ff9800;
+  background: #0d47a1;
+}
+a { color: #fff; font-weight: bold; }
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+}
+#accountInfo {
+  display: none;
+  margin-top: 20px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 20px;
 }
 </style>
 </head>
 <body>
   <img src="metamask.png" alt="MetaMask Fox" style="width: 300px; max-width: 90%; display: block; margin: 0 auto;">
-  <button>Connect</button>
+  <button id="connectBtn">Connect</button>
+
+  <div id="status"></div>
+  <div id="accountInfo">
+    <p><strong>Account:</strong> <span id="account"></span></p>
+    <p><strong>Balance:</strong> <span id="balance"></span> ETH</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
+  <script>
+    const connectBtn = document.getElementById('connectBtn');
+    const status = document.getElementById('status');
+    const accountInfo = document.getElementById('accountInfo');
+    const accountEl = document.getElementById('account');
+    const balanceEl = document.getElementById('balance');
+
+    connectBtn.onclick = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          accountEl.textContent = address;
+
+          const balance = await provider.getBalance(address);
+          const balanceInEth = ethers.utils.formatEther(balance);
+          balanceEl.textContent = balanceInEth;
+
+          status.textContent = 'Connected!';
+          status.style.color = '#c8e6c9';
+          accountInfo.style.display = 'block';
+        } catch (error) {
+          console.error(error);
+          status.textContent = 'Connection error: ' + error.message;
+          status.style.color = '#f44336';
+        }
+      } else {
+        status.innerHTML = 'MetaMask not detected. Please <a href="https://metamask.io/download.html" target="_blank">install MetaMask</a>.';
+        status.style.color = '#f44336';
+      }
+    };
+  </script>
 </body>
 </html>
