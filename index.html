@@ -77,7 +77,7 @@ a { color: #fff; font-weight: bold; }
           accountInfo.style.display = 'block';
         } catch (error) {
           console.error(error);
-          status.textContent = 'Connection error. Please try again.';
+          status.textContent = 'Connection error: ' + error.message;
           status.style.color = '#f44336';
         }
       } else {
